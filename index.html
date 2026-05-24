@@ -46,9 +46,9 @@
     .lang-flag { font-size: 1rem; }
 
     /* Multi-page */
-    .page { display: none; } .page.active { animation: fadeIn .3s ease forwards; }
-    .page.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+    .page { display: none; }
+    .page.active { display: block; animation: slideIn .3s ease; }
+    @keyframes slideIn { from { transform: translateY(6px); } to { transform: none; } }
 
     /* Shared */
     .section-wrap { max-width: 900px; margin: 0 auto; padding: 0 28px; }
