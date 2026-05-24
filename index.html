@@ -46,7 +46,7 @@
     .lang-flag { font-size: 1rem; }
 
     /* Multi-page */
-    .page { display: none; animation: fadeIn .3s ease; }
+    .page { display: none; } .page.active { animation: fadeIn .3s ease forwards; }
     .page.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
