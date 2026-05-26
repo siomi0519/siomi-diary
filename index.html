@@ -1783,18 +1783,17 @@ document.getElementById('subscribe-form').addEventListener('submit', async funct
   btn.disabled = true; btn.textContent = '訂閱中...';
   status.innerHTML = '';
   try {
-    const body = { email, status: 'active', source: 'website' };
-    if (name) body.name = name;
-    const r = await fetch(SUPA_URL + '/rest/v1/subscribers', {
+    const payload = { email, _subject: '新訂閱者！siomi diary', _captcha: 'false', _template: 'box' };
+    if (name) payload.name = name;
+    const r = await fetch('https://formsubmit.co/ajax/meicy321@gmail.com', {
       method: 'POST',
-      headers: supaHeaders({ 'Prefer': 'return=minimal' }),
-      body: JSON.stringify(body)
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
     });
-    if (r.ok || r.status === 201) {
+    const data = await r.json();
+    if (data.success === 'true' || data.success === true) {
       document.getElementById('subscribe-form').style.display = 'none';
       document.getElementById('sub-success').style.display = 'block';
-    } else if (r.status === 409) {
-      status.innerHTML = '<span class="cf-ok">你已經訂閱了！感謝支持 ✦</span>';
     } else {
       status.innerHTML = '<span class="cf-err">訂閱失敗，請稍後再試。</span>';
     }
