@@ -2208,6 +2208,8 @@ const NL = {
 </div>`
 };
 
+async function loadComments() {
+  const el = document.getElementById('comments-list');
   try {
     const r = await fetch(`${SUPA_URL}/rest/v1/comments?order=created_at.desc&limit=50`, { headers: supaHeaders() });
     const data = await r.json();
