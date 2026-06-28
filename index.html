@@ -2457,11 +2457,40 @@ function showPage(id) {
 window.addEventListener('hashchange', () => { const id = window.location.hash.slice(1) || 'who'; showPage(id); });
 navLinks.forEach(a => { a.addEventListener('click', e => { e.preventDefault(); const id = a.dataset.page; history.pushState(null,'','#'+id); showPage(id); }); });
 
+
+let currentLang = (function() { try { return localStorage.getItem('siomi-lang') || 'zh'; } catch(e) { return 'zh'; } })();
+
+function applyLang(lang) {
+  currentLang = lang;
+  const t = T[lang] || T.zh;
+  const d = DIARY[lang] || DIARY.zh;
+  // Update all i18n text nodes
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+  // Update diary body elements
+  document.querySelectorAll('[id^="de-body-"]').forEach(el => {
+    const n = el.id.replace('de-body-', '');
+    if (d['body-' + n]) el.innerHTML = d['body-' + n];
+  });
+  // Update lang label
+  const names = { zh:'中文', tai:'台語', en:'English', ja:'日本語', ko:'한국어', fr:'Français', ar:'العربية', ms:'Bahasa' };
+  const lbl = document.getElementById('lang-label');
+  if (lbl) lbl.textContent = names[lang] || lang;
+  // RTL for Arabic
+  document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  // Save preference
+  try { localStorage.setItem('siomi-lang', lang); } catch(e) {}
+}
+
 const langBtn = document.getElementById('lang-toggle');
 const langDrop = document.getElementById('lang-dropdown');
 langBtn.addEventListener('click', e => { e.stopPropagation(); langDrop.classList.toggle('open'); });
 document.addEventListener('click', () => langDrop.classList.remove('open'));
 langDrop.querySelectorAll('a').forEach(a => { a.addEventListener('click', e => { e.preventDefault(); applyLang(a.dataset.lang); langDrop.classList.remove('open'); }); });
+// Apply saved or default language on load
+if (currentLang !== 'zh') applyLang(currentLang);
 
 // Supabase comment form
 document.getElementById('comment-form').addEventListener('submit', async function(e) {
